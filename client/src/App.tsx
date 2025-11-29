@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import Checkout from "@/pages/Checkout";
+import ChatWidget from "@/components/ChatWidget";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <CartProvider>
           <Toaster />
           <Router />
+          <ChatWidget />
         </CartProvider>
       </TooltipProvider>
     </QueryClientProvider>
