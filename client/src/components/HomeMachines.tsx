@@ -4,7 +4,7 @@ import { ShoppingCart, ChevronLeft, ChevronRight, Check, Truck, Shield } from 'l
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useScrollAnimation, useMouseTilt } from '@/hooks/useScrollAnimation';
 import { useCart } from '@/lib/cartContext';
 import { homeMachines } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +26,7 @@ function ImageGallery({ images, name }: ImageGalleryProps) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative group/gallery">
       {/* Main image */}
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted to-muted/50 rounded-md">
         <AnimatePresence mode="wait">
@@ -34,7 +34,7 @@ function ImageGallery({ images, name }: ImageGalleryProps) {
             key={currentIndex}
             src={images[currentIndex]}
             alt={`${name} - Image ${currentIndex + 1}`}
-            className="w-full h-full object-contain p-4"
+            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
@@ -42,13 +42,19 @@ function ImageGallery({ images, name }: ImageGalleryProps) {
           />
         </AnimatePresence>
 
+        {/* Overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Decorative glow */}
+        <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
         {/* Navigation arrows */}
         {images.length > 1 && (
           <>
             <Button
               size="icon"
               variant="secondary"
-              className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+              className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/gallery:opacity-100 transition-opacity shadow-lg"
               onClick={prevImage}
               data-testid="button-gallery-prev"
             >
@@ -57,7 +63,7 @@ function ImageGallery({ images, name }: ImageGalleryProps) {
             <Button
               size="icon"
               variant="secondary"
-              className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+              className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/gallery:opacity-100 transition-opacity shadow-lg"
               onClick={nextImage}
               data-testid="button-gallery-next"
             >
@@ -104,6 +110,7 @@ interface MachineShowcaseProps {
 }
 
 function MachineShowcase({ machine, index, isVisible, reversed }: MachineShowcaseProps) {
+  const { ref, tilt } = useMouseTilt();
   const { addItem } = useCart();
   const { toast } = useToast();
   const [showAllFeatures, setShowAllFeatures] = useState(false);
@@ -131,131 +138,148 @@ function MachineShowcase({ machine, index, isVisible, reversed }: MachineShowcas
       transition={{ duration: 0.7, delay: index * 0.2 }}
       className="mb-16 last:mb-0"
     >
-      <Card
-        className="group relative overflow-visible bg-card border-card-border shadow-lg"
-        data-testid={`card-home-machine-${machine.id}`}
+      <div
+        ref={ref}
+        className="perspective-1000"
+        style={{
+          transform: `rotateX(${tilt.x * 0.5}deg) rotateY(${tilt.y * 0.5}deg)`,
+          transition: 'transform 0.1s ease-out',
+        }}
       >
-        <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 p-6 lg:p-10 ${reversed ? 'lg:direction-rtl' : ''}`}>
-          {/* Image gallery */}
-          <div className={`${reversed ? 'lg:order-2 lg:direction-ltr' : ''}`}>
-            <ImageGallery images={machine.images} name={machine.name} />
-          </div>
+        <Card
+          className="group relative overflow-visible bg-card border-card-border shadow-lg transition-all duration-500 hover:shadow-2xl"
+          data-testid={`card-home-machine-${machine.id}`}
+        >
+          <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 p-6 lg:p-10 ${reversed ? 'lg:direction-rtl' : ''}`}>
+            {/* Image gallery */}
+            <div className={`${reversed ? 'lg:order-2 lg:direction-ltr' : ''}`}>
+              <ImageGallery images={machine.images} name={machine.name} />
+            </div>
 
-          {/* Content */}
-          <div className={`flex flex-col ${reversed ? 'lg:order-1 lg:direction-ltr' : ''}`}>
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <Badge variant="secondary">For Offices and Homes</Badge>
-                <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                  Made in Italy
-                </Badge>
-              </div>
-
-              <h3 className="text-2xl lg:text-4xl font-serif font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                {machine.name}
-              </h3>
-
-              <p className="text-muted-foreground mb-6">
-                {machine.description}
-              </p>
-
-              {/* Beverages list */}
-              {machine.beverages && machine.beverages.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">
-                    {machine.beverages.length} Beverages at Touch of Button
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {machine.beverages.map((beverage, i) => (
-                      <Badge key={i} variant="outline" className="text-xs">
-                        {beverage}
-                      </Badge>
-                    ))}
-                  </div>
+            {/* Content */}
+            <div className={`flex flex-col ${reversed ? 'lg:order-1 lg:direction-ltr' : ''}`}>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Badge variant="secondary">For Offices and Homes</Badge>
+                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                    Made in Italy
+                  </Badge>
                 </div>
-              )}
 
-              {/* Features */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">
-                  Key Features
-                </h4>
-                <ul className="space-y-3">
-                  <AnimatePresence mode="sync">
-                    {displayedFeatures.map((feature, i) => (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="flex items-start gap-3"
-                      >
-                        <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Check className="w-3 h-3 text-primary" />
-                        </div>
-                        <div>
-                          <span className="font-medium text-foreground">{feature.title}</span>
-                          <p className="text-sm text-muted-foreground mt-0.5">{feature.description}</p>
-                        </div>
-                      </motion.li>
-                    ))}
-                  </AnimatePresence>
-                </ul>
-                
-                {machine.features.length > 4 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowAllFeatures(!showAllFeatures)}
-                    className="text-primary hover:text-primary/80 mt-3 p-0 h-auto"
-                    data-testid={`button-show-features-${machine.id}`}
-                  >
-                    {showAllFeatures ? 'Show Less Features' : `Show All ${machine.features.length} Features`}
-                  </Button>
+                <h3 className="text-2xl lg:text-4xl font-serif font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                  {machine.name}
+                </h3>
+
+                <p className="text-muted-foreground mb-6">
+                  {machine.description}
+                </p>
+
+                {/* Beverages list */}
+                {machine.beverages && machine.beverages.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">
+                      {machine.beverages.length} Beverages at Touch of Button
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {machine.beverages.map((beverage, i) => (
+                        <Badge key={i} variant="outline" className="text-xs">
+                          {beverage}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 )}
-              </div>
 
-              {/* Warranty and shipping */}
-              <div className="flex flex-wrap gap-4 mb-6 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Shield className="w-4 h-4 text-primary" />
-                  <span>Warranty: {machine.warranty}</span>
+                {/* Features */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">
+                    Key Features
+                  </h4>
+                  <ul className="space-y-3">
+                    <AnimatePresence mode="sync">
+                      {displayedFeatures.map((feature, i) => (
+                        <motion.li
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="flex items-start gap-3"
+                        >
+                          <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 text-primary" />
+                          </div>
+                          <div>
+                            <span className="font-medium text-foreground">{feature.title}</span>
+                            <p className="text-sm text-muted-foreground mt-0.5">{feature.description}</p>
+                          </div>
+                        </motion.li>
+                      ))}
+                    </AnimatePresence>
+                  </ul>
+                  
+                  {machine.features.length > 4 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAllFeatures(!showAllFeatures)}
+                      className="text-primary hover:text-primary/80 mt-3 p-0 h-auto"
+                      data-testid={`button-show-features-${machine.id}`}
+                    >
+                      {showAllFeatures ? 'Show Less Features' : `Show All ${machine.features.length} Features`}
+                    </Button>
+                  )}
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Truck className="w-4 h-4 text-primary" />
-                  <span>{machine.shipping}</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Price and CTA */}
-            <div className="pt-6 border-t border-border">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <span className="text-sm text-muted-foreground">Price</span>
-                  <div className="text-3xl lg:text-4xl font-bold text-primary">
-                    AED {machine.price.toLocaleString()}
+                {/* Warranty and shipping */}
+                <div className="flex flex-wrap gap-4 mb-6 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Shield className="w-4 h-4 text-primary" />
+                    <span>Warranty: {machine.warranty}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Truck className="w-4 h-4 text-primary" />
+                    <span>{machine.shipping}</span>
                   </div>
                 </div>
-                
-                <Button
-                  size="lg"
-                  onClick={handleAddToCart}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg w-full sm:w-auto"
-                  data-testid={`button-add-cart-${machine.id}`}
-                >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </Button>
+              </div>
+
+              {/* Price and CTA */}
+              <div className="pt-6 border-t border-border">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-sm text-muted-foreground">Price</span>
+                    <div className="text-3xl lg:text-4xl font-bold text-primary">
+                      AED {machine.price.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  <Button
+                    size="lg"
+                    onClick={handleAddToCart}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg w-full sm:w-auto"
+                    data-testid={`button-add-cart-${machine.id}`}
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Add to Cart
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Decorative accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-50" />
-      </Card>
+          {/* Decorative accent */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-50 group-hover:opacity-100 transition-opacity" />
+          
+          {/* Bottom accent line */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-1 bg-primary origin-left"
+            initial={{ scaleX: 0 }}
+            whileHover={{ scaleX: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+        </Card>
+      </div>
     </motion.div>
   );
 }

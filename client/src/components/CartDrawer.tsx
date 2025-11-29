@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCart, type CartItemType } from '@/lib/cartContext';
@@ -86,13 +87,6 @@ function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 export default function CartDrawer() {
   const { items, isOpen, isLoading, closeCart, totalItems, totalPrice, clearCart, updateQuantity, removeItem } = useCart();
   const { toast } = useToast();
-
-  const handleCheckout = () => {
-    toast({
-      title: 'Checkout initiated',
-      description: "We'll contact you shortly to complete your order.",
-    });
-  };
 
   const handleClearCart = () => {
     clearCart();
@@ -239,14 +233,16 @@ export default function CartDrawer() {
 
                 {/* Actions */}
                 <div className="space-y-2">
-                  <Button
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
-                    size="lg"
-                    onClick={handleCheckout}
-                    data-testid="button-checkout"
-                  >
-                    Proceed to Checkout
-                  </Button>
+                  <Link href="/checkout" onClick={closeCart}>
+                    <Button
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+                      size="lg"
+                      data-testid="button-checkout"
+                    >
+                      Proceed to Checkout
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                   <Button
                     variant="outline"
                     className="w-full"

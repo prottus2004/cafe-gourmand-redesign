@@ -4,7 +4,7 @@ import { ShoppingCart, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useScrollAnimation, useMouseTilt } from '@/hooks/useScrollAnimation';
 import { useCart } from '@/lib/cartContext';
 import { commercialMachines } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +17,7 @@ interface MachineCardProps {
 
 function MachineCard({ machine, index, isVisible }: MachineCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { ref, tilt } = useMouseTilt();
   const { addItem } = useCart();
   const { toast } = useToast();
 
@@ -42,111 +43,132 @@ function MachineCard({ machine, index, isVisible }: MachineCardProps) {
       animate={isVisible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.1 + index * 0.15 }}
     >
-      <Card
-        className="group relative h-full overflow-visible bg-card border-card-border transition-all duration-500 hover:shadow-2xl"
-        data-testid={`card-machine-${machine.id}`}
+      <div
+        ref={ref}
+        className="perspective-1000"
+        style={{
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transition: 'transform 0.1s ease-out',
+        }}
       >
-        <div className="grid md:grid-cols-2 gap-0">
-          {/* Image section */}
-          <div className="relative aspect-square md:aspect-auto overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center p-6"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.4 }}
-            >
-              <img
-                src={machine.image}
-                alt={machine.name}
-                className="w-full h-full object-contain drop-shadow-lg"
-                loading="lazy"
-              />
-            </motion.div>
-
-            {/* Price badge */}
-            <div className="absolute top-4 right-4">
-              <Badge className="bg-primary text-primary-foreground text-lg px-3 py-1 shadow-lg">
-                AED {machine.price.toLocaleString()}
-              </Badge>
-            </div>
-
-            {/* Decorative gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-secondary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-
-          {/* Content section */}
-          <div className="p-6 lg:p-8 flex flex-col">
-            <div className="flex-1">
-              <Badge variant="secondary" className="mb-3">
-                Commercial
-              </Badge>
-              
-              <h3 className="text-2xl lg:text-3xl font-serif font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
-                {machine.name}
-              </h3>
-
-              {/* Features list */}
-              <ul className="space-y-2 mb-4">
-                <AnimatePresence mode="sync">
-                  {displayedFeatures.map((feature, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex items-start gap-2 text-sm text-muted-foreground"
-                    >
-                      <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
-
-              {/* Expand/collapse button */}
-              {machine.features.length > 4 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-primary hover:text-primary/80 p-0 h-auto"
-                  data-testid={`button-expand-${machine.id}`}
-                >
-                  {isExpanded ? (
-                    <>
-                      Show Less <ChevronUp className="w-4 h-4 ml-1" />
-                    </>
-                  ) : (
-                    <>
-                      Show More ({machine.features.length - 4} more) <ChevronDown className="w-4 h-4 ml-1" />
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-
-            {/* Add to cart button */}
-            <div className="mt-6 pt-4 border-t border-border">
-              <Button
-                onClick={handleAddToCart}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
-                data-testid={`button-add-cart-${machine.id}`}
+        <Card
+          className="group relative h-full overflow-visible bg-card border-card-border transition-all duration-500 hover:shadow-2xl"
+          data-testid={`card-machine-${machine.id}`}
+        >
+          <div className="grid md:grid-cols-2 gap-0">
+            {/* Image section */}
+            <div className="relative aspect-square md:aspect-auto overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center p-6"
               >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Add to Cart
-              </Button>
+                <img
+                  src={machine.image}
+                  alt={machine.name}
+                  className="w-full h-full object-contain drop-shadow-lg transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                />
+              </motion.div>
+
+              {/* Price badge */}
+              <div className="absolute top-4 right-4 z-10">
+                <Badge className="bg-primary text-primary-foreground text-lg px-3 py-1 shadow-lg">
+                  AED {machine.price.toLocaleString()}
+                </Badge>
+              </div>
+
+              {/* Overlay on hover */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8"
+              >
+                <Button
+                  onClick={handleAddToCart}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+                  data-testid={`button-quick-add-${machine.id}`}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Quick Add
+                </Button>
+              </motion.div>
+
+              {/* Decorative glow */}
+              <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </div>
+
+            {/* Content section */}
+            <div className="p-6 lg:p-8 flex flex-col">
+              <div className="flex-1">
+                <Badge variant="secondary" className="mb-3">
+                  Commercial
+                </Badge>
+                
+                <h3 className="text-2xl lg:text-3xl font-serif font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                  {machine.name}
+                </h3>
+
+                {/* Features list */}
+                <ul className="space-y-2 mb-4">
+                  <AnimatePresence mode="sync">
+                    {displayedFeatures.map((feature, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
+                        <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
+
+                {/* Expand/collapse button */}
+                {machine.features.length > 4 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="text-primary hover:text-primary/80 p-0 h-auto"
+                    data-testid={`button-expand-${machine.id}`}
+                  >
+                    {isExpanded ? (
+                      <>
+                        Show Less <ChevronUp className="w-4 h-4 ml-1" />
+                      </>
+                    ) : (
+                      <>
+                        Show More ({machine.features.length - 4} more) <ChevronDown className="w-4 h-4 ml-1" />
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+
+              {/* Add to cart button */}
+              <div className="mt-6 pt-4 border-t border-border">
+                <Button
+                  onClick={handleAddToCart}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+                  data-testid={`button-add-cart-${machine.id}`}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Add to Cart
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom accent */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary to-accent origin-left"
-          initial={{ scaleX: 0 }}
-          whileHover={{ scaleX: 1 }}
-          transition={{ duration: 0.4 }}
-        />
-      </Card>
+          {/* Bottom accent */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary to-accent origin-left"
+            initial={{ scaleX: 0 }}
+            whileHover={{ scaleX: 1 }}
+            transition={{ duration: 0.4 }}
+          />
+        </Card>
+      </div>
     </motion.div>
   );
 }

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Link } from 'wouter';
 import { useSmoothScroll } from '@/hooks/useScrollAnimation';
 import { contactInfo, logoUrl } from '@/lib/data';
 
@@ -197,12 +198,16 @@ export default function Footer() {
               &copy; {new Date().getFullYear()} Café Gourmand. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
-              <button className="text-secondary-foreground/50 hover:text-primary transition-colors">
-                Privacy Policy
-              </button>
-              <button className="text-secondary-foreground/50 hover:text-primary transition-colors">
-                Terms of Service
-              </button>
+              <Link href="/privacy-policy">
+                <span className="text-secondary-foreground/50 hover:text-primary transition-colors cursor-pointer" data-testid="link-footer-privacy">
+                  Privacy Policy
+                </span>
+              </Link>
+              <Link href="/terms-of-service">
+                <span className="text-secondary-foreground/50 hover:text-primary transition-colors cursor-pointer" data-testid="link-footer-terms">
+                  Terms of Service
+                </span>
+              </Link>
             </div>
           </div>
         </div>
