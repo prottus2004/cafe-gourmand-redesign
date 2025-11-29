@@ -58,7 +58,7 @@ export default function Footer() {
               <img
                 src={logoUrl}
                 alt="Café Gourmand"
-                className="h-10 w-auto transition-all logo-gold"
+                className="h-12 w-auto transition-all logo-footer"
               />
             </motion.a>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">

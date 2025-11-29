@@ -169,12 +169,32 @@
   background-color: hsl(var(--background));
 }
 
-/* Premium logo color - deep espresso brown in light mode, original in dark mode */
-.logo-gold {
+/* Logo styles for navigation bar states */
+/* White logo for brown bar (not scrolled) */
+.logo-white {
+  filter: brightness(0) invert(100%);
+}
+
+/* Dark espresso logo for light bar (scrolled) */
+.logo-dark {
   filter: brightness(0) invert(18%) sepia(30%) saturate(800%) hue-rotate(350deg) brightness(90%);
 }
 
-.dark .logo-gold {
+/* Dark mode overrides - logo stays white/light */
+.dark .logo-white {
+  filter: brightness(100%);
+}
+
+.dark .logo-dark {
+  filter: brightness(100%);
+}
+
+/* Footer logo - espresso brown in light mode, original in dark mode */
+.logo-footer {
+  filter: brightness(0) invert(18%) sepia(30%) saturate(800%) hue-rotate(350deg) brightness(90%);
+}
+
+.dark .logo-footer {
   filter: brightness(100%);
 }
 

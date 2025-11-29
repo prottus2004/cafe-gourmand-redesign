@@ -130,7 +130,9 @@ export default function Navigation() {
                   <img
                     src={logoUrl}
                     alt="Café Gourmand"
-                    className="relative h-9 md:h-11 w-auto transition-all duration-300 logo-gold"
+                    className={`relative h-10 md:h-12 w-auto transition-all duration-300 ${
+                      isScrolled ? 'logo-dark' : 'logo-white'
+                    }`}
                   />
                 </motion.a>
 
