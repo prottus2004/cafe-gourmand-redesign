@@ -29,6 +29,10 @@ export const cartItems = pgTable("cart_items", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   sessionId: text("session_id").notNull(),
   productId: text("product_id").notNull(),
+  productName: text("product_name").notNull(),
+  productPrice: real("product_price").notNull(),
+  productImage: text("product_image").notNull(),
+  productType: text("product_type").notNull(),
   quantity: integer("quantity").notNull().default(1),
 });
 
