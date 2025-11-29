@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/lib/cartContext';
 import { useSmoothScroll, useScrollProgress } from '@/hooks/useScrollAnimation';
 import { logoUrl, contactInfo } from '@/lib/data';
+import ThemeToggle from './ThemeToggle';
 
 const navLinks = [
   { href: 'hero', label: 'Home' },
@@ -104,6 +105,9 @@ export default function Navigation() {
                 <Phone className="w-4 h-4" />
                 <span className="hidden xl:inline">{contactInfo.phone}</span>
               </motion.a>
+
+              {/* Theme Toggle */}
+              <ThemeToggle />
 
               {/* Cart Button */}
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

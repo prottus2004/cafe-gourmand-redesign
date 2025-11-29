@@ -269,7 +269,7 @@ export default function ChatWidget() {
         <Button
           onClick={toggleChat}
           size="lg"
-          className="h-14 w-14 rounded-full shadow-lg animate-pulse-glow"
+          className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 dark:bg-accent dark:hover:bg-accent/90 transition-colors duration-500"
           data-testid="button-open-chat"
         >
           <AnimatePresence mode="wait">
@@ -281,7 +281,7 @@ export default function ChatWidget() {
                 exit={{ rotate: 90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6 text-primary-foreground dark:text-accent-foreground" />
               </motion.div>
             ) : (
               <motion.div
@@ -291,7 +291,7 @@ export default function ChatWidget() {
                 exit={{ rotate: -90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <MessageCircle className="w-6 h-6" />
+                <MessageCircle className="w-6 h-6 text-primary-foreground dark:text-accent-foreground" />
               </motion.div>
             )}
           </AnimatePresence>
