@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Coffee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,11 +8,32 @@ import { heroContent } from '@/lib/data';
 export default function Hero() {
   const { scrollTo } = useSmoothScroll();
   const { ref: parallaxRef, offset } = useParallax(0.3);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    setMousePosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePosition({ x: 0, y: 0 });
+  };
 
   return (
     <section
       id="hero"
-      ref={parallaxRef}
+      ref={(el) => {
+        if (el) {
+          (parallaxRef as React.MutableRefObject<HTMLElement | null>).current = el;
+          (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
+        }
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Background with parallax */}
@@ -25,9 +47,13 @@ export default function Hero() {
         {/* Coffee pattern background */}
         <div className="absolute inset-0 bg-coffee-pattern opacity-30" />
         
-        {/* Animated gradient orbs */}
+        {/* Animated gradient orbs - cursor responsive */}
         <motion.div
           className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+          style={{
+            transform: `translateX(${mousePosition.x * 50}px) translateY(${mousePosition.y * 50}px)`,
+            transition: 'transform 0.3s ease-out',
+          }}
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -40,6 +66,10 @@ export default function Hero() {
         />
         <motion.div
           className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl"
+          style={{
+            transform: `translateX(${mousePosition.x * -40}px) translateY(${mousePosition.y * -40}px)`,
+            transition: 'transform 0.35s ease-out',
+          }}
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.4, 0.2, 0.4],
@@ -139,17 +169,25 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Image */}
+          {/* Hero Image - Cursor Responsive */}
           <motion.div
             className="relative hidden lg:block"
             initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
+            style={{
+              transform: `perspective(1000px) rotateX(${mousePosition.y * -8}deg) rotateY(${mousePosition.x * 8}deg)`,
+              transition: 'transform 0.1s ease-out',
+            }}
           >
             <div className="relative perspective-2000">
-              {/* Floating coffee image */}
+              {/* Floating coffee image - responds to cursor */}
               <motion.div
                 className="relative z-10"
+                style={{
+                  transform: `translateX(${mousePosition.x * 20}px) translateY(${mousePosition.y * 20}px)`,
+                  transition: 'transform 0.15s ease-out',
+                }}
                 animate={{
                   y: [0, -15, 0],
                   rotateZ: [0, 2, 0],
@@ -164,12 +202,19 @@ export default function Hero() {
                   src={heroContent.heroImage}
                   alt="Premium Coffee"
                   className="w-full max-w-lg mx-auto drop-shadow-2xl"
+                  style={{
+                    filter: `drop-shadow(${mousePosition.x * 10}px ${mousePosition.y * 10}px 20px rgba(0,0,0,0.3))`,
+                  }}
                 />
               </motion.div>
 
-              {/* Decorative elements */}
+              {/* Decorative elements - move opposite to cursor for depth */}
               <motion.div
                 className="absolute -top-10 -right-10 w-32 h-32 bg-primary/30 rounded-full blur-2xl"
+                style={{
+                  transform: `translateX(${mousePosition.x * -30}px) translateY(${mousePosition.y * -30}px)`,
+                  transition: 'transform 0.2s ease-out',
+                }}
                 animate={{
                   scale: [1, 1.3, 1],
                   opacity: [0.5, 0.8, 0.5],
@@ -182,6 +227,10 @@ export default function Hero() {
               />
               <motion.div
                 className="absolute -bottom-5 -left-10 w-40 h-40 bg-accent/40 rounded-full blur-2xl"
+                style={{
+                  transform: `translateX(${mousePosition.x * -25}px) translateY(${mousePosition.y * -25}px)`,
+                  transition: 'transform 0.25s ease-out',
+                }}
                 animate={{
                   scale: [1.2, 1, 1.2],
                   opacity: [0.4, 0.7, 0.4],
@@ -193,7 +242,7 @@ export default function Hero() {
                 }}
               />
 
-              {/* Coffee beans floating */}
+              {/* Coffee beans floating - each with unique cursor response */}
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
@@ -201,7 +250,8 @@ export default function Hero() {
                   style={{
                     top: `${20 + i * 15}%`,
                     left: `${10 + i * 20}%`,
-                    transform: 'rotate(45deg)',
+                    transform: `rotate(45deg) translateX(${mousePosition.x * (10 + i * 5)}px) translateY(${mousePosition.y * (10 + i * 5)}px)`,
+                    transition: `transform ${0.1 + i * 0.05}s ease-out`,
                   }}
                   animate={{
                     y: [0, -20, 0],
