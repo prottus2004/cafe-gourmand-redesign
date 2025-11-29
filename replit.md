@@ -109,3 +109,22 @@ Preferred communication style: Simple, everyday language.
 - Real images hosted on cafegourmandae.com CDN
 - Four coffee blends ranging from AED 79-109
 - Commercial and home espresso machines with detailed specifications
+
+### Payment Integration
+- **Status:** Stripe integration was proposed but user dismissed it
+- **Current Implementation:** Checkout page with multiple payment method options (Credit/Debit Card, Apple Pay, Google Pay, Samsung Pay, PayPal, Bank Transfer, Cash on Delivery)
+- **Note:** To enable real payment processing, user needs to set up Stripe integration or provide API keys for payment gateways
+- When ready to implement real payments, use `search_integrations` tool to find Stripe connector
+
+### Legal Pages
+- Privacy Policy: Exact content from cafegourmandae.com/privacy-policy
+- Terms of Service: Created for the business (original site doesn't have this page)
+
+## Recent Changes
+
+- Added 3D hover effects with mouse tilt to Commercial Machines and Home Machines sections
+- Created Privacy Policy page with exact content from original website
+- Created Terms of Service page (original site doesn't have one)
+- Implemented comprehensive Checkout page with 7 payment methods
+- Added CartDrawer link to Checkout page
+- Updated Footer with links to Privacy Policy and Terms of Service
