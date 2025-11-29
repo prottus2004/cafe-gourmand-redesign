@@ -131,7 +131,7 @@ export default function Navigation() {
                     src={logoUrl}
                     alt="Café Gourmand"
                     className="relative h-9 md:h-11 w-auto transition-all duration-300"
-                    style={{ filter: 'sepia(1) saturate(2) hue-rotate(-10deg) brightness(0.6)' }}
+                    style={{ filter: 'brightness(0) invert(36%) sepia(50%) saturate(600%) hue-rotate(10deg) brightness(95%)' }}
                   />
                 </motion.a>
 

@@ -59,7 +59,7 @@ export default function Footer() {
                 src={logoUrl}
                 alt="Café Gourmand"
                 className="h-10 w-auto transition-all"
-                style={{ filter: 'sepia(1) saturate(2) hue-rotate(-10deg) brightness(0.6)' }}
+                style={{ filter: 'brightness(0) invert(36%) sepia(50%) saturate(600%) hue-rotate(10deg) brightness(95%)' }}
               />
             </motion.a>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
