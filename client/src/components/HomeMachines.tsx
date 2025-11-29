@@ -16,13 +16,18 @@ interface ImageGalleryProps {
 
 function ImageGallery({ images, name }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isZooming, setIsZooming] = useState(false);
 
   const nextImage = () => {
+    setIsZooming(true);
     setCurrentIndex((prev) => (prev + 1) % images.length);
+    setTimeout(() => setIsZooming(false), 500);
   };
 
   const prevImage = () => {
+    setIsZooming(true);
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setTimeout(() => setIsZooming(false), 500);
   };
 
   return (
@@ -34,42 +39,64 @@ function ImageGallery({ images, name }: ImageGalleryProps) {
             key={currentIndex}
             src={images[currentIndex]}
             alt={`${name} - Image ${currentIndex + 1}`}
-            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
+            className="w-full h-full object-contain p-4"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ 
+              opacity: 1, 
+              scale: isZooming ? 1.15 : 1,
+            }}
+            exit={{ opacity: 0, scale: 1.2 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           />
         </AnimatePresence>
 
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 via-transparent to-transparent opacity-0 group-hover/gallery:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
         {/* Decorative glow */}
-        <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover/gallery:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-        {/* Navigation arrows */}
+        {/* Navigation arrows - always visible with enhanced styling */}
         {images.length > 1 && (
           <>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/gallery:opacity-100 transition-opacity shadow-lg"
-              onClick={prevImage}
-              data-testid="button-gallery-prev"
+            <motion.div
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/gallery:opacity-100 transition-opacity shadow-lg"
-              onClick={nextImage}
-              data-testid="button-gallery-next"
+              <Button
+                size="icon"
+                variant="secondary"
+                className="shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background border border-border"
+                onClick={prevImage}
+                data-testid="button-gallery-prev"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+            </motion.div>
+            <motion.div
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
+              <Button
+                size="icon"
+                variant="secondary"
+                className="shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background border border-border"
+                onClick={nextImage}
+                data-testid="button-gallery-next"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
           </>
+        )}
+
+        {/* Image counter indicator */}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-foreground border border-border">
+            {currentIndex + 1} / {images.length}
+          </div>
         )}
       </div>
 
