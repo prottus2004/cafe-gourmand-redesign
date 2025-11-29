@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, Coffee } from 'lucide-react';
+import { ChevronDown, Coffee, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSmoothScroll, useParallax } from '@/hooks/useScrollAnimation';
 import { heroContent } from '@/lib/data';
@@ -36,43 +36,46 @@ export default function Hero() {
       onMouseLeave={handleMouseLeave}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background with parallax */}
+      {/* Multi-layer gradient background */}
       <div
         className="absolute inset-0 z-0"
         style={{ transform: `translateY(${offset}px)` }}
       >
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/95 via-secondary/80 to-secondary/70 z-10" />
+        {/* Rich gradient overlay - browns to amber to cream */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f0a] via-[#2d1810] to-[#3d2518] z-10" />
+        
+        {/* Secondary gradient for depth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-amber-900/20 to-orange-800/30 z-11" />
+        
+        {/* Top gradient accent */}
+        <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-amber-700/20 via-transparent to-transparent z-12" />
+        
+        {/* Bottom warm glow */}
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-orange-900/30 via-transparent to-transparent z-12" />
         
         {/* Coffee pattern background */}
-        <div className="absolute inset-0 bg-coffee-pattern opacity-30" />
+        <div className="absolute inset-0 bg-coffee-pattern opacity-20" />
         
-        {/* Animated gradient orbs - cursor responsive */}
+        {/* Animated mesh gradient */}
         <motion.div
-          className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+          className="absolute inset-0 opacity-40"
           style={{
-            transform: `translateX(${mousePosition.x * 50}px) translateY(${mousePosition.y * 50}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
+            background: `radial-gradient(ellipse at ${50 + mousePosition.x * 20}% ${50 + mousePosition.y * 20}%, rgba(180, 120, 60, 0.3), transparent 60%)`,
+            transition: 'background 0.5s ease-out',
           }}
         />
+        
+        {/* Large animated gradient orbs */}
         <motion.div
-          className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/30 rounded-full blur-3xl"
+          className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[100px]"
           style={{
-            transform: `translateX(${mousePosition.x * -40}px) translateY(${mousePosition.y * -40}px)`,
-            transition: 'transform 0.35s ease-out',
+            background: 'radial-gradient(circle, rgba(180, 120, 60, 0.4), transparent 70%)',
+            transform: `translateX(${mousePosition.x * 80}px) translateY(${mousePosition.y * 80}px)`,
+            transition: 'transform 0.4s ease-out',
           }}
           animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.4, 0.2, 0.4],
+            scale: [1, 1.3, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
             duration: 10,
@@ -80,10 +83,68 @@ export default function Hero() {
             ease: 'easeInOut',
           }}
         />
+        <motion.div
+          className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[80px]"
+          style={{
+            background: 'radial-gradient(circle, rgba(200, 150, 80, 0.35), transparent 70%)',
+            transform: `translateX(${mousePosition.x * -60}px) translateY(${mousePosition.y * -60}px)`,
+            transition: 'transform 0.45s ease-out',
+          }}
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.4, 0.25, 0.4],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        
+        {/* Accent orb */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[120px]"
+          style={{
+            background: 'radial-gradient(circle, rgba(139, 90, 43, 0.25), transparent 60%)',
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+        
+        {/* Floating particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-amber-400/60 rounded-full"
+            style={{
+              left: `${5 + (i * 5) % 90}%`,
+              top: `${10 + (i * 7) % 80}%`,
+            }}
+            animate={{
+              y: [-20, 20, -20],
+              x: [-10, 10, -10],
+              opacity: [0.3, 0.8, 0.3],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 4 + (i % 4),
+              repeat: Infinity,
+              delay: i * 0.2,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
       </div>
 
       {/* Content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-36">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Text content */}
           <motion.div
@@ -92,22 +153,27 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {/* Welcome badge */}
+            {/* Welcome badge with shimmer */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 mb-6"
+              className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-600/30 via-orange-500/20 to-amber-600/30 border border-amber-500/40 mb-8 overflow-hidden"
             >
-              <Coffee className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary-foreground">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              />
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="text-sm font-medium text-amber-100">
                 {heroContent.welcome}
               </span>
             </motion.div>
 
-            {/* Main heading */}
+            {/* Main heading with enhanced styling */}
             <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-primary-foreground leading-tight mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold leading-tight mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -115,19 +181,26 @@ export default function Hero() {
               {heroContent.title.split(' ').map((word, index) => (
                 <motion.span
                   key={index}
-                  className={`inline-block ${index === 2 || index === 3 ? 'text-primary' : ''}`}
+                  className={`inline-block ${
+                    index === 2 || index === 3 
+                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500' 
+                      : 'text-amber-50'
+                  }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                  style={{
+                    textShadow: index === 2 || index === 3 ? 'none' : '0 2px 20px rgba(0,0,0,0.3)',
+                  }}
                 >
                   {word}{' '}
                 </motion.span>
               ))}
             </motion.h1>
 
-            {/* Description */}
+            {/* Description with enhanced readability */}
             <motion.p
-              className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-amber-100/80 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
@@ -135,37 +208,65 @@ export default function Hero() {
               {heroContent.description}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons with premium styling */}
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
             >
-              <Button
-                size="lg"
-                onClick={() => scrollTo('coffeeproducts')}
-                className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold rounded-md shadow-lg"
-                data-testid="button-products-cta"
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="relative z-10">Our Products</span>
-                <motion.div
-                  className="absolute inset-0 bg-white/20"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.5 }}
-                />
-              </Button>
+                <Button
+                  size="lg"
+                  onClick={() => scrollTo('coffeeproducts')}
+                  className="group relative overflow-hidden bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 hover:from-amber-500 hover:via-orange-400 hover:to-amber-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-xl shadow-amber-900/30 border border-amber-400/20"
+                  data-testid="button-products-cta"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Coffee className="w-5 h-5" />
+                    Our Products
+                  </span>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                </Button>
+              </motion.div>
               
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => scrollTo('contact')}
-                className="bg-transparent border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-lg font-semibold rounded-md backdrop-blur-sm"
-                data-testid="button-contact-cta"
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
               >
-                Contact Us
-              </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => scrollTo('contact')}
+                  className="bg-white/5 border-2 border-amber-200/30 text-amber-50 hover:bg-amber-50/10 hover:border-amber-200/50 px-8 py-6 text-lg font-semibold rounded-xl backdrop-blur-md"
+                  data-testid="button-contact-cta"
+                >
+                  Contact Us
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              className="flex items-center gap-6 mt-10 justify-center lg:justify-start"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.3 }}
+            >
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <span className="text-amber-200/70 text-sm">Premium Italian Coffee</span>
             </motion.div>
           </motion.div>
 
@@ -181,7 +282,17 @@ export default function Hero() {
             }}
           >
             <div className="relative perspective-2000">
-              {/* Floating coffee image - responds to cursor */}
+              {/* Glow behind image */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-amber-500/30 via-orange-400/20 to-amber-500/30 blur-3xl scale-110"
+                animate={{
+                  opacity: [0.4, 0.6, 0.4],
+                  scale: [1.1, 1.2, 1.1],
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              />
+              
+              {/* Floating coffee image */}
               <motion.div
                 className="relative z-10"
                 style={{
@@ -203,20 +314,21 @@ export default function Hero() {
                   alt="Premium Coffee"
                   className="w-full max-w-lg mx-auto drop-shadow-2xl"
                   style={{
-                    filter: `drop-shadow(${mousePosition.x * 10}px ${mousePosition.y * 10}px 20px rgba(0,0,0,0.3))`,
+                    filter: `drop-shadow(${mousePosition.x * 15}px ${mousePosition.y * 15}px 30px rgba(0,0,0,0.4)) drop-shadow(0 0 60px rgba(180, 120, 60, 0.3))`,
                   }}
                 />
               </motion.div>
 
-              {/* Decorative elements - move opposite to cursor for depth */}
+              {/* Decorative elements */}
               <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-primary/30 rounded-full blur-2xl"
+                className="absolute -top-10 -right-10 w-40 h-40 rounded-full blur-2xl"
                 style={{
+                  background: 'radial-gradient(circle, rgba(251, 191, 36, 0.4), transparent 70%)',
                   transform: `translateX(${mousePosition.x * -30}px) translateY(${mousePosition.y * -30}px)`,
                   transition: 'transform 0.2s ease-out',
                 }}
                 animate={{
-                  scale: [1, 1.3, 1],
+                  scale: [1, 1.4, 1],
                   opacity: [0.5, 0.8, 0.5],
                 }}
                 transition={{
@@ -226,8 +338,9 @@ export default function Hero() {
                 }}
               />
               <motion.div
-                className="absolute -bottom-5 -left-10 w-40 h-40 bg-accent/40 rounded-full blur-2xl"
+                className="absolute -bottom-5 -left-10 w-48 h-48 rounded-full blur-2xl"
                 style={{
+                  background: 'radial-gradient(circle, rgba(234, 179, 8, 0.35), transparent 70%)',
                   transform: `translateX(${mousePosition.x * -25}px) translateY(${mousePosition.y * -25}px)`,
                   transition: 'transform 0.25s ease-out',
                 }}
@@ -242,20 +355,20 @@ export default function Hero() {
                 }}
               />
 
-              {/* Coffee beans floating - each with unique cursor response */}
-              {[...Array(5)].map((_, i) => (
+              {/* Coffee beans floating */}
+              {[...Array(6)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-4 h-6 bg-coffee-800 rounded-full"
+                  className="absolute w-3 h-5 bg-gradient-to-br from-amber-800 to-amber-950 rounded-full shadow-lg"
                   style={{
-                    top: `${20 + i * 15}%`,
-                    left: `${10 + i * 20}%`,
-                    transform: `rotate(45deg) translateX(${mousePosition.x * (10 + i * 5)}px) translateY(${mousePosition.y * (10 + i * 5)}px)`,
+                    top: `${15 + i * 14}%`,
+                    left: `${5 + i * 18}%`,
+                    transform: `rotate(${45 + i * 15}deg) translateX(${mousePosition.x * (10 + i * 5)}px) translateY(${mousePosition.y * (10 + i * 5)}px)`,
                     transition: `transform ${0.1 + i * 0.05}s ease-out`,
                   }}
                   animate={{
-                    y: [0, -20, 0],
-                    rotate: [45, 90, 45],
+                    y: [0, -25, 0],
+                    rotate: [45 + i * 15, 90 + i * 15, 45 + i * 15],
                     opacity: [0.6, 0.9, 0.6],
                   }}
                   transition={{
@@ -271,22 +384,30 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator with enhanced styling */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.2 }}
+        transition={{ duration: 0.8, delay: 1.4 }}
       >
         <motion.button
           onClick={() => scrollTo('about')}
-          className="flex flex-col items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
-          animate={{ y: [0, 10, 0] }}
+          className="flex flex-col items-center gap-3 text-amber-200/60 hover:text-amber-100 transition-colors group"
+          animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
           data-testid="button-scroll-down"
         >
-          <span className="text-sm font-medium">Scroll Down</span>
-          <ChevronDown className="w-6 h-6" />
+          <span className="text-sm font-medium tracking-wider uppercase">Discover More</span>
+          <motion.div
+            className="w-6 h-10 rounded-full border-2 border-amber-400/40 flex items-start justify-center pt-2"
+          >
+            <motion.div
+              className="w-1.5 h-2.5 bg-amber-400 rounded-full"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
+          </motion.div>
         </motion.button>
       </motion.div>
     </section>
