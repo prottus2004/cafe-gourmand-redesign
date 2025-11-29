@@ -24,7 +24,7 @@ export default function Footer() {
   const { scrollTo } = useSmoothScroll();
 
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-b from-muted/50 via-muted to-muted dark:from-muted/20 dark:via-muted/30 dark:to-muted/40 pt-16 pb-8">
+    <footer className="relative overflow-hidden pt-16 pb-8 bg-cafe-beige">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-coffee-pattern opacity-[0.03] dark:opacity-[0.02]" />
       
@@ -58,7 +58,8 @@ export default function Footer() {
               <img
                 src={logoUrl}
                 alt="Café Gourmand"
-                className="h-10 w-auto brightness-0 dark:brightness-100 transition-all"
+                className="h-10 w-auto transition-all"
+                style={{ filter: 'sepia(1) saturate(2) hue-rotate(-10deg) brightness(0.6)' }}
               />
             </motion.a>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">

@@ -160,6 +160,15 @@
   }
 }
 
+/* Custom beige background for Hero and Footer - light mode only */
+.bg-cafe-beige {
+  background-color: hsl(30, 18%, 85%);
+}
+
+.dark .bg-cafe-beige {
+  background-color: hsl(var(--background));
+}
+
 /* Custom 3D and Animation Utilities */
 @layer utilities {
   /* Hide ugly search cancel button in Chrome */

@@ -75,8 +75,8 @@ export default function Navigation() {
           <motion.div
             className={`relative overflow-hidden rounded-2xl transition-all duration-500 ${
               isScrolled
-                ? 'bg-background/80 dark:bg-background/70 shadow-xl border border-border/50'
-                : 'bg-gradient-to-r from-secondary/95 via-secondary/90 to-secondary/95 shadow-2xl border border-primary/20'
+                ? 'bg-background/80 dark:bg-transparent shadow-xl dark:shadow-none border border-border/50 dark:border-border/20'
+                : 'bg-gradient-to-r from-secondary/95 via-secondary/90 to-secondary/95 dark:from-transparent dark:via-transparent dark:to-transparent shadow-2xl dark:shadow-none border border-primary/20 dark:border-border/10'
             }`}
             style={{
               backdropFilter: 'blur(20px)',
@@ -130,7 +130,8 @@ export default function Navigation() {
                   <img
                     src={logoUrl}
                     alt="Café Gourmand"
-                    className="relative h-9 md:h-11 w-auto brightness-0 dark:brightness-100 transition-all duration-300"
+                    className="relative h-9 md:h-11 w-auto transition-all duration-300"
+                    style={{ filter: 'sepia(1) saturate(2) hue-rotate(-10deg) brightness(0.6)' }}
                   />
                 </motion.a>
 

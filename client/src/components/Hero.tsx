@@ -34,7 +34,7 @@ export default function Hero() {
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cafe-beige"
     >
       {/* Background with parallax */}
       <div
@@ -155,21 +155,26 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {heroContent.title.split(' ').map((word, index) => (
+              <div className="block">
                 <motion.span
-                  key={index}
-                  className={`inline-block ${
-                    index === 2 || index === 3 
-                      ? 'text-primary' 
-                      : 'text-foreground'
-                  }`}
+                  className="inline-block text-foreground"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  {word}{' '}
+                  Select Your
                 </motion.span>
-              ))}
+              </div>
+              <div className="block">
+                <motion.span
+                  className="inline-block text-primary"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                >
+                  Perfect Brew
+                </motion.span>
+              </div>
             </motion.h1>
 
             {/* Description */}
