@@ -57,7 +57,7 @@ function MachineCard({ machine, index, isVisible }: MachineCardProps) {
         >
           <div className="grid md:grid-cols-2 gap-0">
             {/* Image section */}
-            <div className="relative aspect-square md:aspect-auto overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+            <div className="relative aspect-square md:aspect-auto bg-gradient-to-br from-muted to-muted/50">
               <motion.div
                 className="absolute inset-0 flex items-center justify-center p-6"
               >
@@ -76,25 +76,23 @@ function MachineCard({ machine, index, isVisible }: MachineCardProps) {
                 </Badge>
               </div>
 
-              {/* Overlay on hover */}
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8 pointer-events-none"
-              >
+              {/* Decorative glow */}
+              <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Overlay gradient on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+              {/* Button - positioned separately with high z-index */}
+              <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20">
                 <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart();
-                  }}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto"
+                  onClick={handleAddToCart}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
                   data-testid={`button-quick-add-${machine.id}`}
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   Quick Add
                 </Button>
               </div>
-
-              {/* Decorative glow */}
-              <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
 
             {/* Content section */}

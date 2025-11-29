@@ -62,7 +62,7 @@ function ProductCard({ product, index, isVisible }: ProductCardProps) {
           </div>
 
           {/* Image container */}
-          <div className="relative aspect-square overflow-hidden rounded-t-md bg-gradient-to-br from-muted/50 to-muted">
+          <div className="relative aspect-square rounded-t-md bg-gradient-to-br from-muted/50 to-muted">
             <motion.img
               src={product.image}
               alt={product.name}
@@ -70,25 +70,23 @@ function ProductCard({ product, index, isVisible }: ProductCardProps) {
               loading="lazy"
             />
             
-            {/* Overlay on hover */}
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 pointer-events-none"
-            >
+            {/* Decorative glow */}
+            <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            {/* Overlay gradient on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+            {/* Button - positioned separately with high z-index */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center z-20">
               <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart();
-                }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto"
+                onClick={handleAddToCart}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
                 data-testid={`button-add-cart-${product.id}`}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to Cart
               </Button>
             </div>
-
-            {/* Decorative glow */}
-            <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
 
           {/* Content */}
