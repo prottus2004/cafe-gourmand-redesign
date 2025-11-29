@@ -58,8 +58,7 @@ export default function Footer() {
               <img
                 src={logoUrl}
                 alt="Café Gourmand"
-                className="h-10 w-auto transition-all"
-                style={{ filter: 'brightness(0) invert(75%) sepia(100%) saturate(500%) hue-rotate(-5deg) brightness(105%)' }}
+                className="h-10 w-auto transition-all logo-gold"
               />
             </motion.a>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">

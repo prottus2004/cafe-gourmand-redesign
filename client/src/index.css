@@ -169,6 +169,15 @@
   background-color: hsl(var(--background));
 }
 
+/* Metallic gold logo filter - light mode only */
+.logo-gold {
+  filter: brightness(0) invert(65%) sepia(90%) saturate(600%) hue-rotate(10deg) brightness(95%) contrast(110%);
+}
+
+.dark .logo-gold {
+  filter: brightness(100%);
+}
+
 /* Custom 3D and Animation Utilities */
 @layer utilities {
   /* Hide ugly search cancel button in Chrome */

@@ -130,8 +130,7 @@ export default function Navigation() {
                   <img
                     src={logoUrl}
                     alt="Café Gourmand"
-                    className="relative h-9 md:h-11 w-auto transition-all duration-300"
-                    style={{ filter: 'brightness(0) invert(75%) sepia(100%) saturate(500%) hue-rotate(-5deg) brightness(105%)' }}
+                    className="relative h-9 md:h-11 w-auto transition-all duration-300 logo-gold"
                   />
                 </motion.a>
 
