@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactMessageSchema } from "@shared/schema";
 import { z } from "zod";
+import { getChatResponse } from "./chatbot";
 
 // Cart item schema for validation
 const addToCartSchema = z.object({
@@ -179,6 +180,34 @@ export async function registerRoutes(
   // ================== PRODUCT ROUTES ==================
   // Products are served from static data on the frontend, 
   // but we can add API endpoints if needed
+
+  // ================== CHATBOT ROUTES ==================
+
+  // Chat message schema for validation
+  const chatMessageSchema = z.object({
+    message: z.string().min(1).max(1000),
+  });
+
+  // Process chat message
+  app.post('/api/chat', async (req: Request, res: Response) => {
+    try {
+      const { message } = chatMessageSchema.parse(req.body);
+      
+      const chatResponse = getChatResponse(message);
+      
+      res.json({
+        response: chatResponse.response,
+        suggestions: chatResponse.suggestions,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: 'Invalid message', details: error.errors });
+      } else {
+        console.error('Error processing chat message:', error);
+        res.status(500).json({ error: 'Failed to process message' });
+      }
+    }
+  });
 
   app.get('/api/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
