@@ -120,8 +120,27 @@ Preferred communication style: Simple, everyday language.
 - Privacy Policy: Exact content from cafegourmandae.com/privacy-policy
 - Terms of Service: Created for the business (original site doesn't have this page)
 
+### AI Chatbot
+- **Type:** Knowledge-based chatbot with pattern matching (no external API costs)
+- **Location:** Floating chat widget in bottom-right corner
+- **Backend:** server/chatbot.ts with comprehensive knowledge base
+- **Frontend:** client/src/components/ChatWidget.tsx with Framer Motion animations
+- **API Endpoint:** POST /api/chat
+- **Features:**
+  - Answers questions about all coffee products, machines, and prices
+  - Provides shipping information (UAE, KSA, GCC)
+  - Shares contact details and business hours
+  - Offers product recommendations
+  - Explains maintenance services
+  - Handles payment method inquiries
+  - Typing indicator and suggested follow-up questions
+- **Cost:** Completely free, unlimited use, no API dependencies
+
 ## Recent Changes
 
+- Added AI chatbot with floating chat widget for customer support
+- Fixed overlay button interactions in Coffee Products and Commercial Machines
+- Enhanced Home Machines image gallery with always-visible navigation arrows and zoom effects
 - Added 3D hover effects with mouse tilt to Commercial Machines and Home Machines sections
 - Created Privacy Policy page with exact content from original website
 - Created Terms of Service page (original site doesn't have one)
