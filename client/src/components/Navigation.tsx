@@ -72,7 +72,7 @@ export default function Navigation() {
               <img
                 src={logoUrl}
                 alt="Café Gourmand"
-                className="h-10 md:h-12 w-auto"
+                className="h-10 md:h-12 w-auto brightness-0 dark:brightness-100"
               />
             </motion.a>
 
