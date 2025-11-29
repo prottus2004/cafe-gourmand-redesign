@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Send, Loader2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Loader2, Sparkles, CheckCircle, ExternalLink } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +35,7 @@ export default function Contact() {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,6 +50,14 @@ export default function Contact() {
     }));
   };
 
+  const isFormValid = formData.name.trim() && formData.email.trim() && formData.message.trim();
+
+  const getMailtoLink = () => {
+    return `mailto:${contactInfo.email}?subject=Inquiry from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\n\nMessage:\n${formData.message}`
+    )}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -61,10 +70,12 @@ export default function Contact() {
       });
 
       if (response.ok) {
+        setIsSuccess(true);
         toast({
-          title: 'Message sent!',
-          description: "We'll get back to you as soon as possible.",
+          title: 'Message Received!',
+          description: "Thank you for contacting us. We'll respond within 24 hours.",
         });
+        
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
         throw new Error('Failed to send message');
@@ -72,7 +83,7 @@ export default function Contact() {
     } catch {
       toast({
         title: 'Error',
-        description: 'Failed to send message. Please try again.',
+        description: 'Failed to send message. Please try again or contact us directly.',
         variant: 'destructive',
       });
     } finally {
@@ -80,24 +91,39 @@ export default function Contact() {
     }
   };
 
+  const handleReset = () => {
+    setIsSuccess(false);
+    setFormData({ name: '', email: '', phone: '', message: '' });
+  };
+
   return (
     <section
       id="contact"
       ref={ref}
-      className="relative py-24 md:py-32 bg-background overflow-hidden"
+      className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-b from-background via-muted/20 to-background dark:from-background dark:via-muted/5 dark:to-background"
     >
       {/* Background decorations */}
-      <div className="absolute inset-0 bg-coffee-pattern opacity-5" />
+      <div className="absolute inset-0 bg-coffee-pattern opacity-[0.03] dark:opacity-[0.02]" />
+      
+      {/* Gradient orbs */}
       <motion.div
-        className="absolute top-1/4 left-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl"
+        className="absolute top-20 left-10 w-[400px] h-[400px] rounded-full blur-[100px] pointer-events-none bg-primary/10"
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.3, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{ duration: 12, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-10 w-[350px] h-[350px] rounded-full blur-[80px] pointer-events-none bg-accent/10"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.1, 0.15, 0.1],
         }}
         transition={{ duration: 10, repeat: Infinity }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <motion.div
           className="text-center mb-16"
@@ -105,19 +131,23 @@ export default function Contact() {
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <motion.span
-            className="inline-block text-sm font-semibold text-primary uppercase tracking-wider mb-3"
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { opacity: 1 } : {}}
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
             transition={{ delay: 0.2 }}
           >
-            Get in Touch
-          </motion.span>
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-foreground">
+              Get in Touch
+            </span>
+          </motion.div>
+          
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
             Contact <span className="text-primary">Us</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We'd love to hear from you about our coffee blends! Ask your questions or share your feedback.
+            We'd love to hear from you about our premium Italian coffee blends and espresso machines!
           </p>
         </motion.div>
 
@@ -128,7 +158,7 @@ export default function Contact() {
             animate={isVisible ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
           >
-            <div className="space-y-6">
+            <div className="space-y-5">
               {contactMethods.map((method, index) => {
                 const Icon = method.icon;
                 
@@ -141,13 +171,18 @@ export default function Contact() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={isVisible ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                    className="block"
+                    className="block group"
                     data-testid={`link-contact-${method.title.toLowerCase().replace(/\s/g, '-')}`}
                   >
-                    <Card className="group p-6 bg-card border-card-border hover-elevate transition-all duration-300">
-                      <div className="flex items-start gap-4">
+                    <Card className="relative p-5 bg-card/80 dark:bg-card/50 border-border/50 backdrop-blur-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 overflow-hidden">
+                      {/* Gradient overlay on hover */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      />
+                      
+                      <div className="relative flex items-center gap-4">
                         <motion.div
-                          className="w-14 h-14 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0"
+                          className="w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0"
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: 'spring', stiffness: 300 }}
                         >
@@ -155,10 +190,10 @@ export default function Contact() {
                         </motion.div>
                         
                         <div>
-                          <h3 className="text-lg font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                          <h3 className="text-lg font-semibold text-foreground mb-0.5 group-hover:text-primary transition-colors">
                             {method.title}
                           </h3>
-                          <p className="text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {method.value}
                           </p>
                         </div>
@@ -178,7 +213,7 @@ export default function Contact() {
             >
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                className="w-full sm:w-auto bg-green-600 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-600 text-white shadow-lg"
                 asChild
               >
                 <a
@@ -207,94 +242,155 @@ export default function Contact() {
             animate={isVisible ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <Card className="p-6 lg:p-8 bg-card border-card-border shadow-lg">
-              <h3 className="text-xl font-serif font-bold text-foreground mb-2">
-                Send A Message
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                We're here to assist you with any questions or inquiries.
-              </p>
+            <Card className="relative p-6 lg:p-8 bg-card/80 dark:bg-card/50 border-border/50 backdrop-blur-sm shadow-xl overflow-hidden">
+              {/* Decorative gradient */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/10 via-transparent to-transparent rounded-bl-full pointer-events-none" />
+              
+              <div className="relative">
+                <h3 className="text-xl font-serif font-bold text-foreground mb-2 flex items-center gap-2">
+                  <Send className="w-5 h-5 text-primary" />
+                  Send A Message
+                </h3>
+                <p className="text-muted-foreground mb-6 text-sm">
+                  Fill out the form and we'll get back to you within 24 hours.
+                </p>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      required
-                      className="bg-background"
-                      data-testid="input-name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="your@email.com"
-                      required
-                      className="bg-background"
-                      data-testid="input-email"
-                    />
-                  </div>
-                </div>
+                {isSuccess ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="py-12 text-center"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', damping: 15 }}
+                      className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500 flex items-center justify-center"
+                    >
+                      <CheckCircle className="w-8 h-8 text-white" />
+                    </motion.div>
+                    <h4 className="text-lg font-semibold text-foreground mb-2">Message Received!</h4>
+                    <p className="text-muted-foreground text-sm mb-6">We'll get back to you within 24 hours.</p>
+                    
+                    <Button
+                      variant="outline"
+                      onClick={handleReset}
+                      data-testid="button-send-another"
+                    >
+                      Send Another Message
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-sm font-medium">Name *</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="Your name"
+                          required
+                          className="bg-background/50 border-border/50 focus:border-primary/50"
+                          data-testid="input-name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-sm font-medium">Email *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="your@email.com"
+                          required
+                          className="bg-background/50 border-border/50 focus:border-primary/50"
+                          data-testid="input-email"
+                        />
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone (Optional)</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+971 50 000 0000"
-                    className="bg-background"
-                    data-testid="input-phone"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm font-medium">Phone (Optional)</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+971 50 000 0000"
+                        className="bg-background/50 border-border/50 focus:border-primary/50"
+                        data-testid="input-phone"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message *</Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell us about your inquiry..."
-                    rows={5}
-                    required
-                    className="bg-background resize-none"
-                    data-testid="input-message"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="text-sm font-medium">Message *</Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="Tell us about your inquiry..."
+                        rows={5}
+                        required
+                        className="bg-background/50 border-border/50 focus:border-primary/50 resize-none"
+                        data-testid="input-message"
+                      />
+                    </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
-                  disabled={isSubmitting}
-                  data-testid="button-submit-contact"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Submit
-                    </>
-                  )}
-                </Button>
-              </form>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <motion.div
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        className="flex-1"
+                      >
+                        <Button
+                          type="submit"
+                          size="lg"
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+                          disabled={isSubmitting}
+                          data-testid="button-submit-contact"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Sending...
+                            </>
+                          ) : (
+                            <>
+                              <Send className="w-4 h-4 mr-2" />
+                              Send Message
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                      
+                      {isFormValid && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                        >
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="lg"
+                            asChild
+                            className="w-full sm:w-auto"
+                          >
+                            <a href={getMailtoLink()} data-testid="link-mailto">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Open in Email
+                            </a>
+                          </Button>
+                        </motion.div>
+                      )}
+                    </div>
+                  </form>
+                )}
+              </div>
             </Card>
           </motion.div>
         </div>

@@ -136,8 +136,26 @@ Preferred communication style: Simple, everyday language.
   - Typing indicator and suggested follow-up questions
 - **Cost:** Completely free, unlimited use, no API dependencies
 
+### Contact Form Email
+- **Status:** Email integration (Resend) was proposed but user dismissed it
+- **Current Implementation:** Contact form saves message to storage and opens user's email client via mailto link
+- **Note:** To enable automated email sending, set up Resend or SendGrid integration via `search_integrations` tool
+- **Workaround:** Messages are stored in backend and mailto opens user's default email client
+
 ## Recent Changes
 
+### Major Visual Overhaul (Latest)
+- Completely redesigned Navigation with floating glassmorphism effect, gradient backgrounds, and animated progress bar
+- Enhanced Hero section with rich multi-layer gradients, floating particles, and premium 3D effects
+- Redesigned Maintenance section with consistent theme-aware styling and gradient icon backgrounds
+- Updated About section with colorful gradient icons and smooth animations
+- Modernized Footer with improved dark/light mode consistency
+- Updated Contact form with success animation and theme-aware styling
+- Added smooth 0.4-0.5s transitions for dark/light mode switching across all elements
+- Theme toggle moved to navigation bar with sun/moon color indicators (amber/blue)
+- Chatbot button now changes colors between light mode (orange) and dark mode (accent)
+
+### Previous Updates
 - Added AI chatbot with floating chat widget for customer support
 - Fixed overlay button interactions in Coffee Products and Commercial Machines
 - Enhanced Home Machines image gallery with always-visible navigation arrows and zoom effects
