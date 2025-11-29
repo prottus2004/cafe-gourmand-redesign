@@ -169,9 +169,9 @@
   background-color: hsl(var(--background));
 }
 
-/* Metallic gold logo filter - light mode only */
+/* Premium logo color - deep espresso brown in light mode, original in dark mode */
 .logo-gold {
-  filter: brightness(0) invert(65%) sepia(90%) saturate(600%) hue-rotate(10deg) brightness(95%) contrast(110%);
+  filter: brightness(0) invert(18%) sepia(30%) saturate(800%) hue-rotate(350deg) brightness(90%);
 }
 
 .dark .logo-gold {
