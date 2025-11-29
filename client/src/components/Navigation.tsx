@@ -82,7 +82,7 @@ export default function Navigation() {
                 <motion.button
                   key={link.href}
                   onClick={() => handleNavClick(link.href)}
-                  className="px-3 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors animated-underline"
+                  className="px-3 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors animated-underline"
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
                   data-testid={`link-nav-${link.href}`}
@@ -97,7 +97,7 @@ export default function Navigation() {
               {/* Phone - Desktop only */}
               <motion.a
                 href={`tel:${contactInfo.phone}`}
-                className="hidden md:flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                className="hidden md:flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 data-testid="link-phone"
               >
@@ -168,7 +168,7 @@ export default function Navigation() {
                   <motion.button
                     key={link.href}
                     onClick={() => handleNavClick(link.href)}
-                    className="w-full text-left px-4 py-3 text-base font-medium text-foreground/80 hover:text-primary hover:bg-muted/50 rounded-md transition-colors"
+                    className="w-full text-left px-4 py-3 text-base font-medium text-primary hover:text-primary/80 hover:bg-muted/50 rounded-md transition-colors"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
